@@ -1,0 +1,73 @@
+install nvidi-driver,cuda-toolkit 11.8,cudnn 9.1.1 ubuntu
+// disable secure boot
+
+- dpkg -l | grep nvidia
+sudo apt purge nvidia-xxx.xx
+sudo apt autoremove // delete dependecies
+sudo apt autoclean // 
+sudo apt install g++ freeglut3-dev build-essential libx11-dev libxmu-dev libxi-dev libglu1-mesa libglu1-mesa-dev // 
+sudo add-apt-repository ppa:graphics-drivers/ppa
+sudo apt update
+ubuntu-drivers devices // list
+sudo apt-get install linux-headers-$(uname -r)
+
+
+blacklist nouveau
+options nouveau modeset=0
+sudo update-initramfs -u
+
+sudo apt install nvidia-driver-**
+sudo reboot
+
+// install cuda toolkik 11.8
+ chmod +x cuda_11.8.0_520.61.05_linux.run
+sudo ./cuda_11.8.0_520.61.05_linux.run
+// you will see sth like this:
+	"
+│ CUDA Installer                                                               │
+│ - [ ] Driver                                                                 │
+│      [ ] 520.61.05                                                           │
+│ + [X] CUDA Toolkit 11.8                                                      │
+│   [X] CUDA Demo Suite 11.8                                                   │
+│   [X] CUDA Documentation 11.8                                                │
+│ - [ ] Kernel Objects                                                         │
+│      [ ] nvidia-fs                                                           │
+│   Options                                                                    │
+│   Install    
+	"
+// then select upgrade all:
+
+"
+│ Existing installation of CUDA Toolkit 11.8 found:                            │
+│ Upgrade all                                                                  │
+│ Choose components to upgrade                                                 │
+│ No, abort installation                                                       │
+│                                                                              │
+│                                                                              │
+│
+"
+
+# setup your paths
+echo 'export PATH=/usr/local/cuda-11.8/bin:$PATH' >> ~/.bashrc
+echo 'export LD_LIBRARY_PATH=/usr/local/cuda-11.8/lib64:$LD_LIBRARY_PATH' >> ~/.bashrc
+source ~/.bashrc
+sudo ldconfig
+
+
+// cudnn installation:
+wget https://developer.download.nvidia.com/compute/cudnn/9.1.1/local_installers/cudnn-local-repo-ubuntu2204-9.1.1_1.0-1_amd64.deb
+sudo dpkg -i cudnn-local-repo-ubuntu2204-9.1.1_1.0-1_amd64.deb
+sudo cp /var/cudnn-local-repo-ubuntu2204-9.1.1/cudnn-*-keyring.gpg /usr/share/keyrings/
+sudo apt-get update
+sudo apt-get -y install cudnn
+
+To install for CUDA 11
+
+sudo apt-get -y install cudnn-cuda-11
+
+// now check 
+nvcc --version
+and nvidia-smi
+
+
+
